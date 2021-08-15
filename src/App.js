@@ -1,13 +1,16 @@
 
-import './App.css';
 import { Component } from 'react/cjs/react.production.min';
+import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Hello Word</h1>
-    </div>
-  );
+class  App extends Component {
+  render(){
+    return (
+      <div className="App">
+        <h1>Hello Word</h1>
+      </div>
+    );
+}
+
 }
 
 export default App;
