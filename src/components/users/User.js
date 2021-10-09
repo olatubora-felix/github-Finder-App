@@ -1,25 +1,22 @@
-import React, {Fragment,Component } from 'react';
+import React, {Fragment, useEffect, useContext} from 'react';
 import Spinner from '../layouts/Spinner';
 import Repos from '../repos/Repos'
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import GithubContext from '../../context/github/githubContext';
 
 
-export class User extends Component {
-  componentDidMount() {
-    this.props.getUser(this.props.match.params.login);
-    this.props.getUserRepos(this.props.match.params.login);
-    console.log(this.props.getUserRepos(this.props.match.params.login));
-  }
+const User = ({ match }) => {
 
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired,
-    getUserRepos: PropTypes.func.isRequired,
-    repos: PropTypes.object.isRequired,
-  }
-  render() {
+  const githubContext = useContext(GithubContext)
+  const { user, getUser, loading, getUserRepos } = githubContext;
+  useEffect(() => {
+    getUser(match.params.login);
+    getUserRepos(match.params.login);
+    console.log(getUserRepos(match.params.login));
+    // eslint-disable-next-line
+  }, []);
+  
     const {
       name,
       company,
@@ -34,8 +31,8 @@ export class User extends Component {
       public_repos,
       public_gists,
       hireable
-    } = this.props.user;
-    const { loading, repos } = this.props
+    } = user;
+
     if(loading) return <Spinner />
     return (
       <Fragment>
@@ -100,10 +97,17 @@ export class User extends Component {
             <div className="badge badge-light">public_repos: {public_repos}</div>
             <div className="badge badge-dark">public_gists: {public_gists}</div>
         </div>
-        <Repos repos={repos}/>
+        <Repos/>
       </Fragment>
     )
-  }
 }
+
+User.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+    getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired,
+    repos: PropTypes.object.isRequired,
+  }
 
 export default User
